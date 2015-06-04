@@ -13,7 +13,12 @@ class MenuController
     puts "2 - Create an entry"
     puts "3 - Search for an entry"
     puts "4 - Import entries from a CSV"
+<<<<<<< HEAD
     puts "5 - Exit"
+=======
+    puts "5 - View Entry Number n"
+    puts "6 - Exit"
+>>>>>>> assignment-22-menucontroller
     print "Enter your selection: "
 
     selection = gets.to_i
@@ -37,6 +42,13 @@ class MenuController
       read_csv
       main_menu
     when 5
+<<<<<<< HEAD
+=======
+      system "clear"
+      view_entry_n
+      main_menu
+    when 6
+>>>>>>> assignment-22-menucontroller
       puts "Good Bye!"
       exit(0)
 
@@ -102,5 +114,25 @@ class MenuController
       entries_submenu(entry)
     end
   end
+<<<<<<< HEAD
 end
 
+=======
+
+  def view_entry_n
+    print "Enter Entry Number you would like to view (1 - #{@address_book.entries.length})"
+    selection = gets.to_i
+    size = @address_book.entries.length
+    
+    if selection <= size
+      puts @address_book.entries[selection - 1].to_s
+    else
+      system "clear"
+      puts "#{selection} is not a valid input"
+      view_entry_n
+    end
+  end
+end
+
+
+>>>>>>> assignment-22-menucontroller
