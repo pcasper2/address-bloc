@@ -1,5 +1,4 @@
 RSpec.describe AddressBook do
-
   let(:book) { AddressBook.new }
 
   def check_entry(entry, expected_name, expected_number, expected_email)
@@ -7,7 +6,6 @@ RSpec.describe AddressBook do
     expect(entry.phone_number).to eql expected_number
     expect(entry.email).to eql expected_email
   end
-
 
   context "attributes" do
     it "should respond to entries" do
