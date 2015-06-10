@@ -14,7 +14,8 @@ class MenuController
     puts "3 - Search for an entry"
     puts "4 - Import entries from a CSV"
     puts "5 - View Entry Number n"
-    puts "6 - Exit"
+    puts "6 - Demolish all entries"
+    puts "7 - Exit"
     print "Enter your selection: "
 
     selection = gets.to_i
@@ -42,6 +43,10 @@ class MenuController
       view_entry_n
       main_menu
     when 6
+      system "clear"
+      demolish
+      main_menu
+    when 7
       puts "Good Bye!"
       exit(0)
 
@@ -80,9 +85,38 @@ class MenuController
   end
 
   def search_entries
+    print "Search by name: "
+    name = gets.chomp
+
+    match = @address_book.binary_search(name)
+    system "clear"
+
+    if match
+      puts match.to_s
+      search_submenu(match)
+    else
+      puts "No match found for #{name}"
+    end
   end
 
   def read_csv
+    print "Enter CSV file to import: "
+    file_name = gets.chomp
+
+    if file_name.empty?
+      system 'clear'
+      puts "No CSV file read"
+      main_menu
+    end
+
+    begin
+      entry_count = @address_book.import_from_csv(file_name)
+      system "clear"
+      puts "#{entry_count} new entries added from #{file_name}"
+    rescue
+      puts "#{file_name} is not a valid CSV file, please enter the name of a valid CSV file"
+      read_csv
+    end
   end
 
   def entry_submenu(entry)
@@ -97,7 +131,10 @@ class MenuController
     case selection
     when "n"
     when "d"
+      delete_entry(entry)
     when "e"
+      edit_entry(entry)
+      entry_submenu(entry)
     when "m"
       system "clear"
       main_menu
@@ -107,6 +144,34 @@ class MenuController
       entries_submenu(entry)
     end
   end
+
+  def search_submenu(entry)
+    puts "d - delete entry"
+    puts "e - edit this entry"
+    puts "m - return to main menu"
+
+    selection = gets.chomp
+
+    case selection
+    when "d"
+      system "clear"
+      delete_entry(entry)
+      main_menu
+    when "e"
+      edit_entry(entry)
+      system "clear"
+      main_menu
+    when "m"
+      system "clear"
+      main_menu
+    else
+      system "clear"
+      puts "#{selection} is not a valid input"
+      puts entry.to_s
+      search_submenu(entry)
+    end
+  end
+
 
   def view_entry_n  
     print "Enter Entry Number you would like to view (1 - #{@address_book.entries.length})"
@@ -121,6 +186,36 @@ class MenuController
       view_entry_n
     end
   end
+
+  def demolish
+    @address_book.entries.clear
+    puts "All entries have been demolished."
+  end
+
+
+  def delete_entry(entry)
+    @address_book.entries.delete(entry)
+    puts "#{entry} has been deleted"
+  end
+
+  def edit_entry(entry)
+    print "Updated name: "
+    name = gets.chomp
+
+    print "Updated phone number: "
+    number = gets.chomp
+
+    print "Updated email: "
+    email = gets.chomp
+
+    entry.name = name if !name.empty?
+    entry.phone_number = number if !number.empty?
+    entry.email = email if !email.empty?
+
+    puts "Updated entry:"
+    puts entry
+  end
+
 end
 
 
